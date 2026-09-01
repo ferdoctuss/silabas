@@ -21,6 +21,28 @@
             overscroll-behavior-y: contain; 
         }
 
+        #btn-config {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            background-color: #ffeaa7;
+            color: #2d3436;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #fdcb6e;
+            transition: all 0.1s;
+            font-weight: bold;
+            touch-action: manipulation;
+            display: none;
+        }
+        #btn-config:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #fdcb6e;
+        }
+
         h1 {
             color: #e17055;
             font-size: 2.2rem;
@@ -54,7 +76,7 @@
             gap: 15px;
             margin: 20px auto;
             min-height: 70px;
-            transition: all 0.5s ease; /* Transición suave para cuando crece */
+            transition: all 0.5s ease;
         }
 
         .slot {
@@ -100,7 +122,7 @@
             color: white;
             cursor: pointer;
             box-shadow: 0 6px 0 #006652;
-            transition: opacity 0.3s ease, transform 0.1s; /* Agregada transición de opacidad para desaparecer */
+            transition: opacity 0.3s ease, transform 0.1s; 
             min-width: 80px;
             flex: 1 1 40%;
         }
@@ -183,6 +205,64 @@
             border-radius: 15px;
             transition: width 0.5s ease;
         }
+
+        #modal-niveles {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            max-width: 320px;
+            width: 90%;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #2d3436;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .modal-botones-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-botones-vertical button {
+            font-size: 1.4rem;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: all 0.1s;
+        }
+        .btn-facil { background-color: #1dd1a1; box-shadow: 0 5px 0 #10ac84; }
+        .btn-medio { background-color: #feca57; box-shadow: 0 5px 0 #ff9f43; color: #2d3436 !important; }
+        .btn-dificil { background-color: #ff6b6b; box-shadow: 0 5px 0 #ee5253; }
+        .modal-botones-vertical button:active { transform: translateY(5px); box-shadow: 0 0 0; }
+
+        .btn-cancelar { 
+            background-color: #b2bec3; 
+            box-shadow: 0 4px 0 #636e72; 
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-cancelar:active { transform: translateY(4px); box-shadow: 0 0 0; }
         
         @keyframes popIn {
             0% { transform: scale(0.1); opacity: 0; }
@@ -193,7 +273,6 @@
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         
-        /* Animación para que la palabra completa crezca */
         @keyframes growWord {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
@@ -203,7 +282,6 @@
             animation: growWord 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* Animación para cuando toca la sílaba incorrecta */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-10px); background-color: #d63031; box-shadow: 0 6px 0 #b33939; }
@@ -215,7 +293,7 @@
 
         @media (max-width: 600px) {
             body { padding: 10px; }
-            h1 { font-size: 1.5rem; margin-top: 25px; }
+            h1 { font-size: 1.5rem; margin-top: 45px; }
             #question-text { font-size: 1.8rem; margin: 10px 0; }
             #image-container { font-size: 5rem; min-height: 80px; }
             .slot { width: 65px; height: 65px; font-size: 2.2rem; }
@@ -234,6 +312,8 @@
     </div>
 
     <div id="juego-container">
+        <button id="btn-config" onclick="abrirSelector()">⚙️</button>
+
         <h1 id="level-title">Nivel 1</h1>
         <div id="question-text" onclick="repetirPreguntaActual()">¿Cómo se escribe? 🤔</div>
         
@@ -245,10 +325,23 @@
         <div id="message"></div>
 
         <div class="progress-wrapper">
-            <div id="progress-text">Progreso: Nivel 1 de 20</div>
+            <div id="progress-text">Progreso: Nivel 1 de 100</div>
             <div id="progress-container">
                 <div id="progress-bar"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Menú de Niveles -->
+    <div id="modal-niveles">
+        <div class="modal-content">
+            <h3>Elige la dificultad</h3>
+            <div class="modal-botones-vertical">
+                <button class="btn-facil" onclick="seleccionarDificultad(1)">Fácil 😊 (1-30)</button>
+                <button class="btn-medio" onclick="seleccionarDificultad(31)">Medio 😐 (31-60)</button>
+                <button class="btn-dificil" onclick="seleccionarDificultad(61)">Difícil 🥵 (61-100)</button>
+            </div>
+            <button class="btn-cancelar" onclick="cerrarSelector()">Cancelar</button>
         </div>
     </div>
 
@@ -265,15 +358,14 @@
         }, false);
 
         let currentLevel = 1;
-        const maxLevels = 20;
+        const maxLevels = 100;
         
-        // Banco de palabras revisado: Todas inconfundibles y directas
+        // BANCO DE 35 PALABRAS: Cero diptongos, solo consonante-vocal perfectas y representables
         const palabrasBanco = [
             { palabra: "casa", silabas: ["CA", "SA"], emoji: "🏠" },
             { palabra: "gato", silabas: ["GA", "TO"], emoji: "🐱" },
             { palabra: "luna", silabas: ["LU", "NA"], emoji: "🌙" },
             { palabra: "moto", silabas: ["MO", "TO"], emoji: "🏍️" },
-            { palabra: "auto", silabas: ["AU", "TO"], emoji: "🚗" },
             { palabra: "pato", silabas: ["PA", "TO"], emoji: "🦆" },
             { palabra: "vaca", silabas: ["VA", "CA"], emoji: "🐮" },
             { palabra: "mano", silabas: ["MA", "NO"], emoji: "✋" },
@@ -288,10 +380,26 @@
             { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" },
             { palabra: "mono", silabas: ["MO", "NO"], emoji: "🐒" },
             { palabra: "lobo", silabas: ["LO", "BO"], emoji: "🐺" },
-            { palabra: "taza", silabas: ["TA", "ZA"], emoji: "☕" }
+            { palabra: "taza", silabas: ["TA", "ZA"], emoji: "☕" },
+            { palabra: "sapo", silabas: ["SA", "PO"], emoji: "🐸" },
+            { palabra: "cubo", silabas: ["CU", "BO"], emoji: "🧊" },
+            { palabra: "gota", silabas: ["GO", "TA"], emoji: "💧" },
+            { palabra: "jugo", silabas: ["JU", "GO"], emoji: "🧃" },
+            { palabra: "mapa", silabas: ["MA", "PA"], emoji: "🗺️" },
+            { palabra: "pavo", silabas: ["PA", "VO"], emoji: "🦃" },
+            { palabra: "rana", silabas: ["RA", "NA"], emoji: "🐸" },
+            { palabra: "rata", silabas: ["RA", "TA"], emoji: "🐀" },
+            { palabra: "tele", silabas: ["TE", "LE"], emoji: "📺" },
+            { palabra: "vela", silabas: ["VE", "LA"], emoji: "🕯️" },
+            { palabra: "copa", silabas: ["CO", "PA"], emoji: "🍷" },
+            { palabra: "cuna", silabas: ["CU", "NA"], emoji: "🛏️" },
+            { palabra: "lata", silabas: ["LA", "TA"], emoji: "🥫" },
+            { palabra: "pelo", silabas: ["PE", "LO"], emoji: "💇‍♂️" },
+            { palabra: "peso", silabas: ["PE", "SO"], emoji: "⚖️" },
+            { palabra: "rama", silabas: ["RA", "MA"], emoji: "🌿" }
         ];
 
-        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO"];
+        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO", "VA", "VE", "VI", "DA", "DE", "DI", "FO", "FA"];
 
         let itemActual = null;
         let ultimaPreguntaTexto = "";
@@ -309,10 +417,12 @@
             }
         }
 
+        // Filtro fonético optimizado para consonante-vocal simples (ahora no se cruzará con diptongos)
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 let fonetica = silaba.toLowerCase();
+                // Ponemos tilde en la única vocal que tiene para forzar el sonido puro
                 fonetica = fonetica.replace('a', 'á').replace('e', 'é').replace('i', 'í').replace('o', 'ó').replace('u', 'ú');
                 fonetica = fonetica + ".";
                 let utterance = new SpeechSynthesisUtterance(fonetica);
@@ -326,9 +436,19 @@
             hablar(ultimaPreguntaTexto);
         }
 
+        function abrirSelector() { document.getElementById('modal-niveles').style.display = 'flex'; }
+        function cerrarSelector() { document.getElementById('modal-niveles').style.display = 'none'; }
+        
+        function seleccionarDificultad(nivelInicio) {
+            currentLevel = nivelInicio;
+            cerrarSelector();
+            playLevel();
+        }
+
         function empezarJuego() {
             document.getElementById('pantalla-inicio').style.display = 'none';
             document.getElementById('juego-container').style.display = 'block';
+            document.getElementById('btn-config').style.display = 'block';
             initGame();
         }
 
@@ -350,7 +470,6 @@
             messageDiv.className = "";
             messageDiv.textContent = "";
             
-            // Le quitamos la animación de la palabra completada si la tuviera del nivel anterior
             builderContainer.classList.remove("word-complete");
 
             let porcentaje = (currentLevel / maxLevels) * 100;
@@ -359,6 +478,7 @@
 
             title.textContent = `Nivel ${currentLevel}`;
 
+            // Selecciona la palabra dando vueltas al banco de 35 (para llegar a 100 repite ordenadamente)
             itemActual = palabrasBanco[(currentLevel - 1) % palabrasBanco.length];
             silabasRestantes = [...itemActual.silabas]; 
             silabasArmadas = []; 
@@ -428,14 +548,12 @@
             const optionsDiv = document.getElementById('options-container');
             const builderContainer = document.getElementById('word-builder');
 
-            // Hacemos desaparecer suavemente los botones que sobraron
             const buttons = Array.from(optionsDiv.children);
             buttons.forEach(btn => {
                 btn.style.opacity = "0";
                 btn.style.pointerEvents = "none";
             });
 
-            // Agregamos la animación para que crezca la palabra armada
             builderContainer.classList.add("word-complete");
 
             messageDiv.textContent = `¡Muy bien! 🎉`;
@@ -464,6 +582,7 @@
             document.getElementById('progress-bar').style.width = "100%";
             document.getElementById('progress-text').textContent = "¡Completado al 100%!";
             document.getElementById('options-container').innerHTML = "";
+            document.getElementById('btn-config').style.display = 'none';
             
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = "¡Eres un campeón, Pol!";
@@ -480,6 +599,7 @@
             restartBtn.style.flex = "none";
             restartBtn.style.width = "auto";
             restartBtn.onclick = () => {
+                document.getElementById('btn-config').style.display = 'block';
                 initGame();
             };
             document.getElementById('options-container').appendChild(restartBtn);
