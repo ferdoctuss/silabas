@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Juego de Sílabas para Pol</title>
+    <link rel="icon" href="icono3.png" sizes="any">
+    <link rel="apple-touch-icon" href="icono3.png">
+    <link rel="shortcut icon" href="icono3.png">
+    
+    <title>Juego de Armar Palabras para Pol</title>
     <style>
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
@@ -27,32 +31,68 @@
         #question-text {
             font-size: 2.5rem;
             color: #0984e3;
-            margin: 20px 0;
+            margin: 15px 0;
             font-weight: bold;
             cursor: pointer;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         #image-container {
-            font-size: 7rem;
-            margin: 15px auto;
+            font-size: 6.5rem;
+            margin: 5px auto;
             max-width: 600px;
-            min-height: 130px;
+            min-height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
+        /* Contenedor de las casillas de la palabra armada */
+        #word-builder {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px auto;
+            min-height: 70px;
+        }
+
+        .slot {
+            width: 75px;
+            height: 75px;
+            border: 4px dashed #b2bec3;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: transparent;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .slot.filled {
+            background-color: #0984e3;
+            border: 4px solid #0984e3;
+            color: white;
+            box-shadow: 0 6px 0 #005f9e;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
         .options {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         button.opcion {
-            font-size: 2.8rem;
+            font-size: 2.6rem;
             font-weight: bold;
-            padding: 15px 30px;
+            padding: 15px 25px;
             border: none;
             border-radius: 20px;
             background-color: #00b894;
@@ -61,23 +101,19 @@
             box-shadow: 0 6px 0 #006652;
             transition: all 0.1s;
             touch-action: manipulation;
-            min-width: 90px;
+            min-width: 80px;
+            flex: 1 1 40%; /* Para que se acomoden 2 por fila si la pantalla es chica */
         }
         button.opcion:active {
             transform: translateY(6px);
             box-shadow: 0 0 0 #006652;
         }
-        button.opcion:disabled {
-            background-color: #b2bec3;
-            box-shadow: 0 6px 0 #636e72;
-            cursor: not-allowed;
-        }
         
         #message {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-top: 15px;
             font-weight: bold;
-            min-height: 55px;
+            min-height: 40px;
             opacity: 0;
         }
 
@@ -122,7 +158,7 @@
         .progress-wrapper {
             width: 85%;
             max-width: 450px;
-            margin: 25px auto 10px auto;
+            margin: 20px auto 10px auto;
             text-align: center;
         }
         #progress-text {
@@ -148,56 +184,52 @@
             transition: width 0.5s ease;
         }
         
-        @keyframes reboteMagico {
+        @keyframes popIn {
             0% { transform: scale(0.1); opacity: 0; }
             60% { transform: scale(1.2); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
         .animacion-exito {
-            animation: reboteMagico 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .animacion-error {
-            opacity: 1 !important;
+        
+        /* Animación para cuando toca la sílaba incorrecta */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); background-color: #d63031; box-shadow: 0 6px 0 #b33939; }
+            40%, 80% { transform: translateX(10px); background-color: #d63031; box-shadow: 0 6px 0 #b33939; }
+        }
+        .shake-animation {
+            animation: shake 0.4s;
         }
 
         @media (max-width: 600px) {
             body { padding: 10px; }
-            h1 {
-                font-size: 1.5rem; 
-                margin-top: 45px;  
-            }
-            #question-text {
-                font-size: 2rem;
-                margin: 15px 0;
-            }
-            #image-container {
-                font-size: 5.5rem;
-                min-height: 100px;
-            }
-            .options { gap: 10px; }
-            button.opcion {
-                font-size: 2.4rem;
-                padding: 12px 20px;
-                flex: 1; 
-            }
-            #message { font-size: 1.6rem; }
-            .intro-titulo { font-size: 2.2rem; }
+            h1 { font-size: 1.5rem; margin-top: 25px; }
+            #question-text { font-size: 1.8rem; margin: 10px 0; }
+            #image-container { font-size: 5rem; min-height: 80px; }
+            .slot { width: 65px; height: 65px; font-size: 2.2rem; }
+            .options { gap: 10px; max-width: 320px; }
+            button.opcion { font-size: 2.2rem; padding: 12px 10px; }
+            #message { font-size: 1.8rem; min-height: 35px; }
         }
     </style>
 </head>
 <body>
 
     <div id="pantalla-inicio">
-        <div class="intro-icono">abc 🔤</div>
-        <div class="intro-titulo">¡A Jugar con Sílabas!</div>
+        <div class="intro-icono">🧩🔤</div>
+        <div class="intro-titulo">¡Arma la Palabra!</div>
         <button id="btn-iniciar" onclick="empezarJuego()">¡Iniciar Juego!</button>
     </div>
 
     <div id="juego-container">
         <h1 id="level-title">Nivel 1</h1>
-        <div id="question-text" onclick="repetirPreguntaActual()">¿Con qué sílaba empieza? 🤔</div>
+        <div id="question-text" onclick="repetirPreguntaActual()">¿Cómo se escribe? 🤔</div>
         
         <div id="image-container"></div>
+        
+        <div id="word-builder"></div>
 
         <div class="options" id="options-container"></div>
         <div id="message"></div>
@@ -212,52 +244,50 @@
 
     <script>
         document.addEventListener('touchmove', function (event) {
-            if (event.scale !== 1) {
-                event.preventDefault();
-            }
+            if (event.scale !== 1) event.preventDefault();
         }, { passive: false });
 
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
             let now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) event.preventDefault();
             lastTouchEnd = now;
         }, false);
 
         let currentLevel = 1;
         const maxLevels = 20;
         
+        // Banco de palabras separadas en sílabas (ideales para 2 sílabas)
         const palabrasBanco = [
-            { palabra: "casa", silaba: "CA", emoji: "🏠" },
-            { palabra: "perro", silaba: "PE", emoji: "🐶" },
-            { palabra: "gato", silaba: "GA", emoji: "🐱" },
-            { palabra: "mesa", silaba: "ME", emoji: "🪑" },
-            { palabra: "luna", silaba: "LU", emoji: "🌙" },
-            { palabra: "sol", silaba: "SO", emoji: "☀️" },
-            { palabra: "auto", silaba: "AU", emoji: "🚗" },
-            { palabra: "moto", silaba: "MO", emoji: "🏍️" },
-            { palabra: "pato", silaba: "PA", emoji: "🦆" },
-            { palabra: "bola", silaba: "BO", emoji: "⚽" },
-            { palabra: "fono", silaba: "FO", emoji: "☎️" },
-            { palabra: "rana", silaba: "RA", emoji: "🐸" },
-            { palabra: "sapo", silaba: "SA", emoji: "🐸" },
-            { palabra: "taza", silaba: "TA", emoji: "☕" },
-            { palabra: "vaca", silaba: "VA", emoji: "🐮" },
-            { palabra: "mano", silaba: "MA", emoji: "✋" },
-            { palabra: "nube", silaba: "NU", emoji: "☁️" },
-            { palabra: "fresa", silaba: "FRE", emoji: "🍓" },
-            { palabra: "dado", silaba: "DA", emoji: "🎲" },
-            { palabra: "bota", silaba: "BO", emoji: "👢" }
+            { palabra: "casa", silabas: ["CA", "SA"], emoji: "🏠" },
+            { palabra: "gato", silabas: ["GA", "TO"], emoji: "🐱" },
+            { palabra: "mesa", silabas: ["ME", "SA"], emoji: "🪑" },
+            { palabra: "luna", silabas: ["LU", "NA"], emoji: "🌙" },
+            { palabra: "sapo", silabas: ["SA", "PO"], emoji: "🐸" },
+            { palabra: "pato", silabas: ["PA", "TO"], emoji: "🦆" },
+            { palabra: "vaca", silabas: ["VA", "CA"], emoji: "🐮" },
+            { palabra: "mano", silabas: ["MA", "NO"], emoji: "✋" },
+            { palabra: "nube", silabas: ["NU", "BE"], emoji: "☁️" },
+            { palabra: "dado", silabas: ["DA", "DO"], emoji: "🎲" },
+            { palabra: "bota", silabas: ["BO", "TA"], emoji: "👢" },
+            { palabra: "sopa", silabas: ["SO", "PA"], emoji: "🍲" },
+            { palabra: "loro", silabas: ["LO", "RO"], emoji: "🦜" },
+            { palabra: "pino", silabas: ["PI", "NO"], emoji: "🌲" },
+            { palabra: "cuna", silabas: ["CU", "NA"], emoji: "🛏️" },
+            { palabra: "lata", silabas: ["LA", "TA"], emoji: "🥫" },
+            { palabra: "rosa", silabas: ["RO", "SA"], emoji: "🌹" },
+            { palabra: "pelo", silabas: ["PE", "LO"], emoji: "💇‍♂️" },
+            { palabra: "dedo", silabas: ["DE", "DO"], emoji: "👆" },
+            { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" }
         ];
 
-        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI"];
+        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO"];
 
         let itemActual = null;
         let ultimaPreguntaTexto = "";
+        let silabasRestantes = []; 
+        let silabasArmadas = [];
 
-        // Función general de voz
         function hablar(texto) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -269,23 +299,16 @@
             }
         }
 
-        // TRUCO DEFINITIVO PARA SÍLABAS (forzamos que sea palabra con tilde y punto)
+        // Filtro fonético para que las sílabas suenen limpias
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                
-                // 1. Pasamos a minúscula (ej. "GA" -> "ga")
                 let fonetica = silaba.toLowerCase();
-                
-                // 2. Le ponemos tilde a la primera vocal que encuentre para forzar golpe de voz
                 fonetica = fonetica.replace('a', 'á').replace('e', 'é').replace('i', 'í').replace('o', 'ó').replace('u', 'ú');
-                
-                // 3. Le añadimos un punto para que el teléfono asuma que es una palabra terminada y no letras sueltas (ej. "gá.")
-                fonetica = fonetica + ".";
-
+                fonetica = fonetica + "."; // Forzamos entonación final para que no deletree
                 let utterance = new SpeechSynthesisUtterance(fonetica);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.8; 
+                utterance.rate = 0.75; 
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -309,6 +332,7 @@
             const title = document.getElementById('level-title');
             const questionText = document.getElementById('question-text');
             const imageContainer = document.getElementById('image-container');
+            const builderContainer = document.getElementById('word-builder');
             const optionsDiv = document.getElementById('options-container');
             const messageDiv = document.getElementById('message');
             const progressBar = document.getElementById('progress-bar');
@@ -324,16 +348,28 @@
             title.textContent = `Nivel ${currentLevel}`;
 
             itemActual = palabrasBanco[(currentLevel - 1) % palabrasBanco.length];
+            silabasRestantes = [...itemActual.silabas]; // Copia de las sílabas que faltan
+            silabasArmadas = []; // Se reinician las completadas
 
-            let textoPregunta = `¿Con qué sílaba empieza ${itemActual.palabra}?`;
+            let textoPregunta = `¿Cómo se escribe ${itemActual.palabra}?`;
             questionText.textContent = textoPregunta + " 🤔";
             ultimaPreguntaTexto = textoPregunta;
             
             hablar(textoPregunta);
             imageContainer.innerHTML = itemActual.emoji;
 
-            let options = [itemActual.silaba];
-            while (options.length < 3) {
+            // Dibujar las casillas vacías (dependiendo de cuántas sílabas tiene la palabra)
+            builderContainer.innerHTML = "";
+            for(let i=0; i < itemActual.silabas.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = "slot";
+                slot.id = "slot-" + i;
+                builderContainer.appendChild(slot);
+            }
+
+            // Generar 4 opciones: Las sílabas correctas + distractores
+            let options = [...itemActual.silabas];
+            while (options.length < 4) {
                 let randomSilaba = silabasDistractoras[Math.floor(Math.random() * silabasDistractoras.length)];
                 if (!options.includes(randomSilaba)) {
                     options.push(randomSilaba);
@@ -347,70 +383,93 @@
                 const btn = document.createElement('button');
                 btn.className = "opcion";
                 btn.textContent = silaba;
-                btn.onclick = () => {
-                    // Lee la sílaba en voz alta de manera correcta
-                    hablarSilaba(silaba);
-                    checkAnswer(silaba);
-                };
+                btn.onclick = () => procesarToque(btn, silaba);
                 optionsDiv.appendChild(btn);
             });
         }
 
-        function checkAnswer(selectedSilaba) {
+        function procesarToque(btn, silabaTocada) {
+            // Siempre se lee la sílaba que el niño toca
+            hablarSilaba(silabaTocada);
+
+            // Verificamos si la sílaba tocada es la que sigue en el orden correcto
+            if (silabaTocada === silabasRestantes[0]) {
+                // ¡ES CORRECTA Y EN ORDEN!
+                silabasRestantes.shift(); // Quitamos la sílaba de las pendientes
+                silabasArmadas.push(silabaTocada); // La pasamos a las armadas
+
+                // Ocultamos el botón que acaba de tocar
+                btn.style.visibility = 'hidden'; 
+
+                // Llenamos la casilla correspondiente arriba
+                const slotActual = document.getElementById("slot-" + (silabasArmadas.length - 1));
+                slotActual.textContent = silabaTocada;
+                slotActual.classList.add("filled");
+
+                // Verificamos si ya completó toda la palabra
+                if (silabasRestantes.length === 0) {
+                    terminarNivel();
+                }
+
+            } else {
+                // ES INCORRECTA (O NO ES SU TURNO)
+                // Se lee, pero el botón solo vibra y no baja
+                btn.classList.add("shake-animation");
+                setTimeout(() => {
+                    btn.classList.remove("shake-animation");
+                }, 400); // Se quita la clase para que pueda volver a vibrar si se equivoca de nuevo
+            }
+        }
+
+        function terminarNivel() {
             const messageDiv = document.getElementById('message');
             const optionsDiv = document.getElementById('options-container');
             const buttons = Array.from(optionsDiv.children);
 
-            if (selectedSilaba === itemActual.silaba) {
-                messageDiv.textContent = `¡Muy bien! 🎉🚀`;
-                messageDiv.style.color = "#00b894";
-                messageDiv.className = "animacion-exito";
-                
-                setTimeout(() => {
-                    hablar(`Muy bien Pol`);
-                }, 600); // Pequeño retraso para que alcance a decir la sílaba primero
+            messageDiv.textContent = `¡Muy bien! 🎉`;
+            messageDiv.style.color = "#00b894";
+            messageDiv.className = "animacion-exito";
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            // Leemos la palabra completa y lo felicitamos
+            setTimeout(() => {
+                hablar(`${itemActual.palabra}, muy bien Pol`);
+            }, 600);
 
-                buttons.forEach(btn => btn.disabled = true);
-                
-                setTimeout(() => {
-                    currentLevel++;
-                    if (currentLevel > maxLevels) {
-                        endGame();
-                    } else {
-                        playLevel();
-                    }
-                }, 2600); 
-            } else {
-                messageDiv.textContent = "¡No! ❌";
-                messageDiv.style.color = "#d63031";
-                messageDiv.className = "animacion-error";
-                
-                setTimeout(() => {
-                    hablar("No");
-                }, 600); // Pequeño retraso para que escuche qué tocó
-            }
+            setTimeout(() => {
+                currentLevel++;
+                if (currentLevel > maxLevels) {
+                    endGame();
+                } else {
+                    playLevel();
+                }
+            }, 2600); 
         }
 
         function endGame() {
             document.getElementById('level-title').textContent = "¡Lo lograste!";
-            document.getElementById('question-text').textContent = "¡Completaste todas las sílabas!";
+            document.getElementById('question-text').textContent = "¡Armaste todas las palabras!";
             document.getElementById('image-container').innerHTML = "🏆👑🥳✨";
+            document.getElementById('word-builder').innerHTML = "";
             document.getElementById('progress-bar').style.width = "100%";
             document.getElementById('progress-text').textContent = "¡Completado al 100%!";
             document.getElementById('options-container').innerHTML = "";
             
             const messageDiv = document.getElementById('message');
-            messageDiv.textContent = "¡Eres un campeón leyendo, Pol!";
+            messageDiv.textContent = "¡Eres un campeón, Pol!";
             messageDiv.style.color = "#e17055";
             messageDiv.className = "animacion-exito";
             
-            hablar("¡Completaste todos los niveles de sílabas, eres un campeón, Pol!");
+            hablar("¡Completaste todas las palabras, eres un campeón, Pol!");
 
             const restartBtn = document.createElement('button');
             restartBtn.className = "opcion";
             restartBtn.textContent = "Jugar de nuevo";
             restartBtn.style.backgroundColor = "#0984e3";
             restartBtn.style.boxShadow = "0 6px 0 #005f9e";
+            restartBtn.style.flex = "none";
+            restartBtn.style.width = "auto";
             restartBtn.onclick = () => {
                 initGame();
             };
