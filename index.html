@@ -257,6 +257,7 @@
         let itemActual = null;
         let ultimaPreguntaTexto = "";
 
+        // Función general de voz
         function hablar(texto) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -268,36 +269,23 @@
             }
         }
 
-        // Corrector fonético estricto para Android/iOS
+        // TRUCO DEFINITIVO PARA SÍLABAS (forzamos que sea palabra con tilde y punto)
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 
-                // Convertimos a minúsculas y agregamos guiones suaves o espacios para forzar fonética en español
+                // 1. Pasamos a minúscula (ej. "GA" -> "ga")
                 let fonetica = silaba.toLowerCase();
-                if (fonetica === "ca") fonetica = "c a";
-                else if (fonetica === "ga") fonetica = "g a";
-                else if (fonetica === "pe") fonetica = "p e";
-                else if (fonetica === "me") fonetica = "m e";
-                else if (fonetica === "lu") fonetica = "l u";
-                else if (fonetica === "so") fonetica = "s o";
-                else if (fonetica === "au") fonetica = "a u";
-                else if (fonetica === "mo") fonetica = "m o";
-                else if (fonetica === "pa") fonetica = "p a";
-                else if (fonetica === "bo") fonetica = "b o";
-                else if (fonetica === "fo") fonetica = "f o";
-                else if (fonetica === "ra") fonetica = "r a";
-                else if (fonetica === "sa") fonetica = "s a";
-                else if (fonetica === "ta") fonetica = "t a";
-                else if (fonetica === "va") fonetica = "v a";
-                else if (fonetica === "ma") fonetica = "m a";
-                else if (fonetica === "nu") fonetica = "n u";
-                else if (fonetica === "fre") fonetica = "f r e";
-                else if (fonetica === "da") fonetica = "d a";
+                
+                // 2. Le ponemos tilde a la primera vocal que encuentre para forzar golpe de voz
+                fonetica = fonetica.replace('a', 'á').replace('e', 'é').replace('i', 'í').replace('o', 'ó').replace('u', 'ú');
+                
+                // 3. Le añadimos un punto para que el teléfono asuma que es una palabra terminada y no letras sueltas (ej. "gá.")
+                fonetica = fonetica + ".";
 
                 let utterance = new SpeechSynthesisUtterance(fonetica);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.75; 
+                utterance.rate = 0.8; 
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -360,6 +348,7 @@
                 btn.className = "opcion";
                 btn.textContent = silaba;
                 btn.onclick = () => {
+                    // Lee la sílaba en voz alta de manera correcta
                     hablarSilaba(silaba);
                     checkAnswer(silaba);
                 };
@@ -379,7 +368,7 @@
                 
                 setTimeout(() => {
                     hablar(`Muy bien Pol`);
-                }, 400);
+                }, 600); // Pequeño retraso para que alcance a decir la sílaba primero
 
                 buttons.forEach(btn => btn.disabled = true);
                 
@@ -390,12 +379,15 @@
                     } else {
                         playLevel();
                     }
-                }, 2400); 
+                }, 2600); 
             } else {
                 messageDiv.textContent = "¡No! ❌";
                 messageDiv.style.color = "#d63031";
                 messageDiv.className = "animacion-error";
-                hablar("No");
+                
+                setTimeout(() => {
+                    hablar("No");
+                }, 600); // Pequeño retraso para que escuche qué tocó
             }
         }
 
