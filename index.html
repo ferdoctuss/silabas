@@ -8,35 +8,13 @@
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             text-align: center;
-            background-color: #fff9e6; /* Fondo amarillo suave y alegre */
+            background-color: #fff9e6;
             margin: 0;
             padding: 20px;
             user-select: none;
             position: relative;
             touch-action: manipulation; 
             overscroll-behavior-y: contain; 
-        }
-        
-        #btn-config {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.2rem;
-            padding: 8px 12px;
-            background-color: #ffeaa7;
-            color: #2d3436;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #fdcb6e;
-            transition: all 0.1s;
-            font-weight: bold;
-            touch-action: manipulation;
-            display: none;
-        }
-        #btn-config:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #fdcb6e;
         }
 
         h1 {
@@ -55,7 +33,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        /* Contenedor del emoji grande de la palabra */
         #image-container {
             font-size: 7rem;
             margin: 15px auto;
@@ -250,9 +227,8 @@
         }, false);
 
         let currentLevel = 1;
-        const maxLevels = 20; // Empezamos con 20 palabras clave de sílabas directas
+        const maxLevels = 20;
         
-        // Banco inicial de palabras con su respectiva sílaba inicial y emoji
         const palabrasBanco = [
             { palabra: "casa", silaba: "CA", emoji: "🏠" },
             { palabra: "perro", silaba: "PE", emoji: "🐶" },
@@ -266,17 +242,16 @@
             { palabra: "bola", silaba: "BO", emoji: "⚽" },
             { palabra: "fono", silaba: "FO", emoji: "☎️" },
             { palabra: "rana", silaba: "RA", emoji: "🐸" },
-            { sapi: "sapo", silaba: "SA", emoji: "🐸" }, // Nota: ajustaremos la lista limpia abajo
+            { palabra: "sapo", silaba: "SA", emoji: "🐸" },
             { palabra: "taza", silaba: "TA", emoji: "☕" },
-            { palabra: "Vaca", silaba: "VA", emoji: "🐮" },
+            { palabra: "vaca", silaba: "VA", emoji: "🐮" },
             { palabra: "mano", silaba: "MA", emoji: "✋" },
-            { palabra: "Nube", silaba: "NU", emoji: "☁️" },
-            { palabra: "Fresa", silaba: "FRE", emoji: "🍓" },
-            { palabra: "Dado", silaba: "DA", emoji: "🎲" },
-            { palabra: "Bota", silaba: "BO", emoji: "👢" }
+            { palabra: "nube", silaba: "NU", emoji: "☁️" },
+            { palabra: "fresa", silaba: "FRE", emoji: "🍓" },
+            { palabra: "dado", silaba: "DA", emoji: "🎲" },
+            { palabra: "bota", silaba: "BO", emoji: "👢" }
         ];
 
-        // Sílabas incorrectas comunes para mezclar
         const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI"];
 
         let itemActual = null;
@@ -285,10 +260,26 @@
         function hablar(texto) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
+                
+                // Limpiamos signos e introducimos espacios estratégicos en las sílabas (ej. "GA" pasa a sonar "g a" o fonema limpio)
                 let textoLimpio = texto.replace(/[¿?¡!🤔]/g, '');
+                
                 let utterance = new SpeechSynthesisUtterance(textoLimpio);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.85;
+                utterance.rate = 0.8; // Más pausado para que vocalice perfecto
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Función especial para leer la sílaba con claridad forzada
+        function hablarSilaba(silaba) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                // Separar las letras con un pequeño punto o espacio fuerza al sintetizador de Android a leer el sonido fonético
+                let silabaFonetica = silaba.split('').join(' ');
+                let utterance = new SpeechSynthesisUtterance(silabaFonetica);
+                utterance.lang = 'es-ES';
+                utterance.rate = 0.7; // Muy pausado para que suene claro (ej. "g... a")
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -326,7 +317,6 @@
 
             title.textContent = `Nivel ${currentLevel}`;
 
-            // Seleccionar un elemento del banco según el nivel
             itemActual = palabrasBanco[(currentLevel - 1) % palabrasBanco.length];
 
             let textoPregunta = `¿Con qué sílaba empieza ${itemActual.palabra}?`;
@@ -334,11 +324,8 @@
             ultimaPreguntaTexto = textoPregunta;
             
             hablar(textoPregunta);
-
-            // Mostrar el emoji de la palabra
             imageContainer.innerHTML = itemActual.emoji;
 
-            // Generar opciones (1 correcta + 2 distractoras)
             let options = [itemActual.silaba];
             while (options.length < 3) {
                 let randomSilaba = silabasDistractoras[Math.floor(Math.random() * silabasDistractoras.length)];
@@ -347,7 +334,6 @@
                 }
             }
 
-            // Desordenar botones
             options.sort(() => Math.random() - 0.5);
 
             optionsDiv.innerHTML = "";
@@ -355,7 +341,11 @@
                 const btn = document.createElement('button');
                 btn.className = "opcion";
                 btn.textContent = silaba;
-                btn.onclick = () => checkAnswer(silaba);
+                // Al hacer clic o tocar, ahora lee la sílaba de forma fonética correcta
+                btn.onclick = () => {
+                    hablarSilaba(silaba);
+                    checkAnswer(silaba);
+                };
                 optionsDiv.appendChild(btn);
             });
         }
@@ -370,7 +360,9 @@
                 messageDiv.style.color = "#00b894";
                 messageDiv.className = "animacion-exito";
                 
-                hablar(`${selectedSilaba}, muy bien Pol`);
+                setTimeout(() => {
+                    hablar(`Muy bien Pol`);
+                }, 400);
 
                 buttons.forEach(btn => btn.disabled = true);
                 
@@ -381,7 +373,7 @@
                     } else {
                         playLevel();
                     }
-                }, 2200); 
+                }, 2400); 
             } else {
                 messageDiv.textContent = "¡No! ❌";
                 messageDiv.style.color = "#d63031";
