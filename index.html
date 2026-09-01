@@ -69,25 +69,25 @@
             align-items: center;
         }
 
-        /* Contenedor de las casillas de la palabra armada */
         #word-builder {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            flex-wrap: wrap; 
+            gap: 12px;
             margin: 20px auto;
             min-height: 70px;
             transition: all 0.5s ease;
         }
 
         .slot {
-            width: 75px;
-            height: 75px;
+            width: 70px;
+            height: 70px;
             border: 4px dashed #b2bec3;
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: bold;
             color: transparent;
             background-color: transparent;
@@ -106,16 +106,16 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             margin-top: 15px;
-            max-width: 400px;
+            max-width: 450px;
             margin-left: auto;
             margin-right: auto;
         }
         button.opcion {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: bold;
-            padding: 15px 25px;
+            padding: 15px 20px;
             border: none;
             border-radius: 20px;
             background-color: #00b894;
@@ -123,8 +123,8 @@
             cursor: pointer;
             box-shadow: 0 6px 0 #006652;
             transition: opacity 0.3s ease, transform 0.1s; 
-            min-width: 80px;
-            flex: 1 1 40%;
+            min-width: 75px;
+            flex: 1 1 25%; 
         }
         button.opcion:active {
             transform: translateY(6px);
@@ -275,8 +275,8 @@
         
         @keyframes growWord {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1.15); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.1); }
         }
         .word-complete {
             animation: growWord 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -296,9 +296,9 @@
             h1 { font-size: 1.5rem; margin-top: 45px; }
             #question-text { font-size: 1.8rem; margin: 10px 0; }
             #image-container { font-size: 5rem; min-height: 80px; }
-            .slot { width: 65px; height: 65px; font-size: 2.2rem; }
-            .options { gap: 10px; max-width: 320px; }
-            button.opcion { font-size: 2.2rem; padding: 12px 10px; }
+            .slot { width: 55px; height: 55px; font-size: 1.8rem; }
+            .options { gap: 10px; max-width: 350px; }
+            button.opcion { font-size: 2rem; padding: 12px 10px; min-width: 60px; }
             #message { font-size: 1.8rem; min-height: 35px; }
         }
     </style>
@@ -332,7 +332,6 @@
         </div>
     </div>
 
-    <!-- Menú de Niveles -->
     <div id="modal-niveles">
         <div class="modal-content">
             <h3>Elige la dificultad</h3>
@@ -360,49 +359,50 @@
         let currentLevel = 1;
         const maxLevels = 100;
         
-        // BANCO DE 35 PALABRAS: Cero diptongos, solo consonante-vocal perfectas y representables
-        const palabrasBanco = [
+        // BANCOS DE PALABRAS
+        const palabrasFacil = [
             { palabra: "casa", silabas: ["CA", "SA"], emoji: "🏠" },
             { palabra: "gato", silabas: ["GA", "TO"], emoji: "🐱" },
             { palabra: "luna", silabas: ["LU", "NA"], emoji: "🌙" },
-            { palabra: "moto", silabas: ["MO", "TO"], emoji: "🏍️" },
             { palabra: "pato", silabas: ["PA", "TO"], emoji: "🦆" },
             { palabra: "vaca", silabas: ["VA", "CA"], emoji: "🐮" },
-            { palabra: "mano", silabas: ["MA", "NO"], emoji: "✋" },
-            { palabra: "nube", silabas: ["NU", "BE"], emoji: "☁️" },
-            { palabra: "dado", silabas: ["DA", "DO"], emoji: "🎲" },
-            { palabra: "bota", silabas: ["BO", "TA"], emoji: "👢" },
             { palabra: "sopa", silabas: ["SO", "PA"], emoji: "🍲" },
-            { palabra: "loro", silabas: ["LO", "RO"], emoji: "🦜" },
-            { palabra: "pino", silabas: ["PI", "NO"], emoji: "🌲" },
-            { palabra: "rosa", silabas: ["RO", "SA"], emoji: "🌹" },
-            { palabra: "dedo", silabas: ["DE", "DO"], emoji: "👆" },
-            { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" },
-            { palabra: "mono", silabas: ["MO", "NO"], emoji: "🐒" },
-            { palabra: "lobo", silabas: ["LO", "BO"], emoji: "🐺" },
-            { palabra: "taza", silabas: ["TA", "ZA"], emoji: "☕" },
-            { palabra: "sapo", silabas: ["SA", "PO"], emoji: "🐸" },
-            { palabra: "cubo", silabas: ["CU", "BO"], emoji: "🧊" },
-            { palabra: "gota", silabas: ["GO", "TA"], emoji: "💧" },
-            { palabra: "jugo", silabas: ["JU", "GO"], emoji: "🧃" },
-            { palabra: "mapa", silabas: ["MA", "PA"], emoji: "🗺️" },
-            { palabra: "pavo", silabas: ["PA", "VO"], emoji: "🦃" },
-            { palabra: "rana", silabas: ["RA", "NA"], emoji: "🐸" },
-            { palabra: "rata", silabas: ["RA", "TA"], emoji: "🐀" },
-            { palabra: "tele", silabas: ["TE", "LE"], emoji: "📺" },
-            { palabra: "vela", silabas: ["VE", "LA"], emoji: "🕯️" },
-            { palabra: "copa", silabas: ["CO", "PA"], emoji: "🍷" },
-            { palabra: "cuna", silabas: ["CU", "NA"], emoji: "🛏️" },
-            { palabra: "lata", silabas: ["LA", "TA"], emoji: "🥫" },
-            { palabra: "pelo", silabas: ["PE", "LO"], emoji: "💇‍♂️" },
-            { palabra: "peso", silabas: ["PE", "SO"], emoji: "⚖️" },
-            { palabra: "rama", silabas: ["RA", "MA"], emoji: "🌿" }
+            { palabra: "nube", silabas: ["NU", "BE"], emoji: "☁️" },
+            { palabra: "tomate", silabas: ["TO", "MA", "TE"], emoji: "🍅" },
+            { palabra: "pelota", silabas: ["PE", "LO", "TA"], emoji: "⚽" },
+            { palabra: "camisa", silabas: ["CA", "MI", "SA"], emoji: "👕" }
         ];
 
-        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO", "VA", "VE", "VI", "DA", "DE", "DI", "FO", "FA"];
+        const palabrasMedio = [
+            { palabra: "mochila", silabas: ["MO", "CHI", "LA"], emoji: "🎒" },
+            { palabra: "paloma", silabas: ["PA", "LO", "MA"], emoji: "🕊️" },
+            { palabra: "caballo", silabas: ["CA", "BA", "LLO"], emoji: "🐴" },
+            { palabra: "zapato", silabas: ["ZA", "PA", "TO"], emoji: "👞" },
+            { palabra: "corona", silabas: ["CO", "RO", "NA"], emoji: "👑" },
+            { palabra: "tesoro", silabas: ["TE", "SO", "RO"], emoji: "🏴‍☠️" },
+            { palabra: "mariposa", silabas: ["MA", "RI", "PO", "SA"], emoji: "🦋" },
+            { palabra: "telefono", silabas: ["TE", "LE", "FO", "NO"], emoji: "☎️" },
+            { palabra: "caramelo", silabas: ["CA", "RA", "ME", "LO"], emoji: "🍬" }
+        ];
+
+        const palabrasDificil = [
+            { palabra: "mariposa", silabas: ["MA", "RI", "PO", "SA"], emoji: "🦋" },
+            { palabra: "telefono", silabas: ["TE", "LE", "FO", "NO"], emoji: "☎️" },
+            { palabra: "semaforo", silabas: ["SE", "MA", "FO", "RO"], emoji: "🚥" },
+            { palabra: "calabaza", silabas: ["CA", "LA", "BA", "ZA"], emoji: "🎃" },
+            { palabra: "lavadora", silabas: ["LA", "VA", "DO", "RA"], emoji: "🧺" },
+            { palabra: "limonada", silabas: ["LI", "MO", "NA", "DA"], emoji: "🍋" },
+            { palabra: "zapatilla", silabas: ["ZA", "PA", "TI", "LLA"], emoji: "👟" },
+            { palabra: "gusanito", silabas: ["GU", "SA", "NI", "TO"], emoji: "🐛" },
+            { palabra: "pelicano", silabas: ["PE", "LI", "CA", "NO"], emoji: "🐦" },
+            { palabra: "hipopotamo", silabas: ["HI", "PO", "PO", "TA", "MO"], emoji: "🦛" }
+        ];
+
+        const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO"];
 
         let itemActual = null;
         let ultimaPreguntaTexto = "";
+        let ultimaPalabra = ""; // Variable para evitar repetir la misma palabra de corrido
         let silabasRestantes = []; 
         let silabasArmadas = [];
 
@@ -417,12 +417,10 @@
             }
         }
 
-        // Filtro fonético optimizado para consonante-vocal simples (ahora no se cruzará con diptongos)
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 let fonetica = silaba.toLowerCase();
-                // Ponemos tilde en la única vocal que tiene para forzar el sonido puro
                 fonetica = fonetica.replace('a', 'á').replace('e', 'é').replace('i', 'í').replace('o', 'ó').replace('u', 'ú');
                 fonetica = fonetica + ".";
                 let utterance = new SpeechSynthesisUtterance(fonetica);
@@ -441,6 +439,7 @@
         
         function seleccionarDificultad(nivelInicio) {
             currentLevel = nivelInicio;
+            ultimaPalabra = ""; // Reiniciamos para que al cambiar de nivel sea 100% fresco
             cerrarSelector();
             playLevel();
         }
@@ -454,6 +453,7 @@
 
         function initGame() {
             currentLevel = 1;
+            ultimaPalabra = "";
             playLevel();
         }
 
@@ -476,10 +476,25 @@
             progressBar.style.width = porcentaje + "%";
             progressText.textContent = `Progreso: Nivel ${currentLevel} de ${maxLevels}`;
 
-            title.textContent = `Nivel ${currentLevel}`;
+            let bancoActual = [];
+            if (currentLevel <= 30) {
+                bancoActual = palabrasFacil;
+                title.textContent = `Nivel ${currentLevel} (Fácil 😊)`;
+            } else if (currentLevel <= 60) {
+                bancoActual = palabrasMedio;
+                title.textContent = `Nivel ${currentLevel} (Medio 😐)`;
+            } else {
+                bancoActual = palabrasDificil;
+                title.textContent = `Nivel ${currentLevel} (Difícil 🥵)`;
+            }
 
-            // Selecciona la palabra dando vueltas al banco de 35 (para llegar a 100 repite ordenadamente)
-            itemActual = palabrasBanco[(currentLevel - 1) % palabrasBanco.length];
+            // SELECCIÓN ALEATORIA EVITANDO LA ÚLTIMA PALABRA REPETIDA
+            do {
+                let indiceAleatorio = Math.floor(Math.random() * bancoActual.length);
+                itemActual = bancoActual[indiceAleatorio];
+            } while (itemActual.palabra === ultimaPalabra && bancoActual.length > 1);
+            
+            ultimaPalabra = itemActual.palabra; // Guardamos para la próxima vez
             silabasRestantes = [...itemActual.silabas]; 
             silabasArmadas = []; 
 
@@ -499,7 +514,9 @@
             }
 
             let options = [...itemActual.silabas];
-            while (options.length < 4) {
+            let totalBotones = itemActual.silabas.length + 2;
+            
+            while (options.length < totalBotones) {
                 let randomSilaba = silabasDistractoras[Math.floor(Math.random() * silabasDistractoras.length)];
                 if (!options.includes(randomSilaba)) {
                     options.push(randomSilaba);
@@ -571,7 +588,7 @@
                 } else {
                     playLevel();
                 }
-            }, 2800); 
+            }, 3000); 
         }
 
         function endGame() {
