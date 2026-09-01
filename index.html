@@ -260,26 +260,44 @@
         function hablar(texto) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                
-                // Limpiamos signos e introducimos espacios estratégicos en las sílabas (ej. "GA" pasa a sonar "g a" o fonema limpio)
                 let textoLimpio = texto.replace(/[¿?¡!🤔]/g, '');
-                
                 let utterance = new SpeechSynthesisUtterance(textoLimpio);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.8; // Más pausado para que vocalice perfecto
+                utterance.rate = 0.85;
                 window.speechSynthesis.speak(utterance);
             }
         }
 
-        // Función especial para leer la sílaba con claridad forzada
+        // Corrector fonético estricto para Android/iOS
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                // Separar las letras con un pequeño punto o espacio fuerza al sintetizador de Android a leer el sonido fonético
-                let silabaFonetica = silaba.split('').join(' ');
-                let utterance = new SpeechSynthesisUtterance(silabaFonetica);
+                
+                // Convertimos a minúsculas y agregamos guiones suaves o espacios para forzar fonética en español
+                let fonetica = silaba.toLowerCase();
+                if (fonetica === "ca") fonetica = "c a";
+                else if (fonetica === "ga") fonetica = "g a";
+                else if (fonetica === "pe") fonetica = "p e";
+                else if (fonetica === "me") fonetica = "m e";
+                else if (fonetica === "lu") fonetica = "l u";
+                else if (fonetica === "so") fonetica = "s o";
+                else if (fonetica === "au") fonetica = "a u";
+                else if (fonetica === "mo") fonetica = "m o";
+                else if (fonetica === "pa") fonetica = "p a";
+                else if (fonetica === "bo") fonetica = "b o";
+                else if (fonetica === "fo") fonetica = "f o";
+                else if (fonetica === "ra") fonetica = "r a";
+                else if (fonetica === "sa") fonetica = "s a";
+                else if (fonetica === "ta") fonetica = "t a";
+                else if (fonetica === "va") fonetica = "v a";
+                else if (fonetica === "ma") fonetica = "m a";
+                else if (fonetica === "nu") fonetica = "n u";
+                else if (fonetica === "fre") fonetica = "f r e";
+                else if (fonetica === "da") fonetica = "d a";
+
+                let utterance = new SpeechSynthesisUtterance(fonetica);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.7; // Muy pausado para que suene claro (ej. "g... a")
+                utterance.rate = 0.75; 
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -341,7 +359,6 @@
                 const btn = document.createElement('button');
                 btn.className = "opcion";
                 btn.textContent = silaba;
-                // Al hacer clic o tocar, ahora lee la sílaba de forma fonética correcta
                 btn.onclick = () => {
                     hablarSilaba(silaba);
                     checkAnswer(silaba);
