@@ -359,7 +359,7 @@
         let currentLevel = 1;
         const maxLevels = 100;
         
-        // BANCOS DE PALABRAS
+        // 30 Palabras Fáciles (2 sílabas)
         const palabrasFacil = [
             { palabra: "casa", silabas: ["CA", "SA"], emoji: "🏠" },
             { palabra: "gato", silabas: ["GA", "TO"], emoji: "🐱" },
@@ -368,42 +368,128 @@
             { palabra: "vaca", silabas: ["VA", "CA"], emoji: "🐮" },
             { palabra: "sopa", silabas: ["SO", "PA"], emoji: "🍲" },
             { palabra: "nube", silabas: ["NU", "BE"], emoji: "☁️" },
-            { palabra: "tomate", silabas: ["TO", "MA", "TE"], emoji: "🍅" },
-            { palabra: "pelota", silabas: ["PE", "LO", "TA"], emoji: "⚽" },
-            { palabra: "camisa", silabas: ["CA", "MI", "SA"], emoji: "👕" }
+            { palabra: "silla", silabas: ["SI", "LLA"], emoji: "🪑" },
+            { palabra: "sapo", silabas: ["SA", "PO"], emoji: "🐸" },
+            { palabra: "dado", silabas: ["DA", "DO"], emoji: "🎲" },
+            { palabra: "bota", silabas: ["BO", "TA"], emoji: "👢" },
+            { palabra: "loro", silabas: ["LO", "RO"], emoji: "🦜" },
+            { palabra: "pino", silabas: ["PI", "NO"], emoji: "🌲" },
+            { palabra: "rosa", silabas: ["RO", "SA"], emoji: "🌹" },
+            { palabra: "dedo", silabas: ["DE", "DO"], emoji: "👆" },
+            { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" },
+            { palabra: "mono", silabas: ["MO", "NO"], emoji: "🐒" },
+            { palabra: "lobo", silabas: ["LO", "BO"], emoji: "🐺" },
+            { palabra: "taza", silabas: ["TA", "ZA"], emoji: "☕" },
+            { palabra: "cubo", silabas: ["CU", "BO"], emoji: "🧊" },
+            { palabra: "gota", silabas: ["GO", "TA"], emoji: "💧" },
+            { palabra: "jugo", silabas: ["JU", "GO"], emoji: "🧃" },
+            { palabra: "mapa", silabas: ["MA", "PA"], emoji: "🗺️" },
+            { palabra: "pavo", silabas: ["PA", "VO"], emoji: "🦃" },
+            { palabra: "rana", silabas: ["RA", "NA"], emoji: "🐸" },
+            { palabra: "rata", silabas: ["RA", "TA"], emoji: "🐀" },
+            { palabra: "tele", silabas: ["TE", "LE"], emoji: "📺" },
+            { palabra: "vela", silabas: ["VE", "LA"], emoji: "🕯️" },
+            { palabra: "copa", silabas: ["CO", "PA"], emoji: "🍷" },
+            { palabra: "cuna", silabas: ["CU", "NA"], emoji: "🛏️" }
         ];
 
+        // 30 Palabras Medias (3 sílabas)
         const palabrasMedio = [
+            { palabra: "tomate", silabas: ["TO", "MA", "TE"], emoji: "🍅" },
+            { palabra: "pelota", silabas: ["PE", "LO", "TA"], emoji: "⚽" },
+            { palabra: "camisa", silabas: ["CA", "MI", "SA"], emoji: "👕" },
             { palabra: "mochila", silabas: ["MO", "CHI", "LA"], emoji: "🎒" },
             { palabra: "paloma", silabas: ["PA", "LO", "MA"], emoji: "🕊️" },
             { palabra: "caballo", silabas: ["CA", "BA", "LLO"], emoji: "🐴" },
             { palabra: "zapato", silabas: ["ZA", "PA", "TO"], emoji: "👞" },
             { palabra: "corona", silabas: ["CO", "RO", "NA"], emoji: "👑" },
-            { palabra: "tesoro", silabas: ["TE", "SO", "RO"], emoji: "🏴‍☠️" },
-            { palabra: "mariposa", silabas: ["MA", "RI", "PO", "SA"], emoji: "🦋" },
-            { palabra: "telefono", silabas: ["TE", "LE", "FO", "NO"], emoji: "☎️" },
-            { palabra: "caramelo", silabas: ["CA", "RA", "ME", "LO"], emoji: "🍬" }
+            { palabra: "bandera", silabas: ["BAN", "DE", "RA"], emoji: "🇵🇪" },
+            { palabra: "maleta", silabas: ["MA", "LE", "TA"], emoji: "🧳" },
+            { palabra: "basura", silabas: ["BA", "SU", "RA"], emoji: "🗑️" },
+            { palabra: "cuchara", silabas: ["CU", "CHA", "RA"], emoji: "🥄" },
+            { palabra: "gusano", silabas: ["GU", "SA", "NO"], emoji: "🐛" },
+            { palabra: "pirata", silabas: ["PI", "RA", "TA"], emoji: "🏴‍☠️" },
+            { palabra: "sirena", silabas: ["SI", "RE", "NA"], emoji: "🧜‍♀️" },
+            { palabra: "ballena", silabas: ["BA", "LLE", "NA"], emoji: "🐳" },
+            { palabra: "conejo", silabas: ["CO", "NE", "JO"], emoji: "🐰" },
+            { palabra: "oveja", silabas: ["O", "VE", "JA"], emoji: "🐑" },
+            { palabra: "helado", silabas: ["HE", "LA", "DO"], emoji: "🍦" },
+            { palabra: "muñeca", silabas: ["MU", "ÑE", "CA"], emoji: "🎎" },
+            { palabra: "jirafa", silabas: ["JI", "RA", "FA"], emoji: "🦒" },
+            { palabra: "gallina", silabas: ["GA", "LLI", "NA"], emoji: "🐔" },
+            { palabra: "payaso", silabas: ["PA", "YA", "SO"], emoji: "🤡" },
+            { palabra: "madera", silabas: ["MA", "DE", "RA"], emoji: "🪵" },
+            { palabra: "tijera", silabas: ["TI", "JE", "RA"], emoji: "✂️" },
+            { palabra: "chaleco", silabas: ["CHA", "LE", "CO"], emoji: "🦺" },
+            { palabra: "cadena", silabas: ["CA", "DE", "NA"], emoji: "⛓️" },
+            { palabra: "maceta", silabas: ["MA", "CE", "TA"], emoji: "🪴" },
+            { palabra: "peluca", silabas: ["PE", "LU", "CA"], emoji: "💇‍♀️" },
+            { palabra: "medusa", silabas: ["ME", "DU", "SA"], emoji: "🪼" }
         ];
 
+        // 40 Palabras Difíciles (3, 4 y 5 sílabas largas) - Tildes corregidas
         const palabrasDificil = [
             { palabra: "mariposa", silabas: ["MA", "RI", "PO", "SA"], emoji: "🦋" },
-            { palabra: "telefono", silabas: ["TE", "LE", "FO", "NO"], emoji: "☎️" },
-            { palabra: "semaforo", silabas: ["SE", "MA", "FO", "RO"], emoji: "🚥" },
+            { palabra: "teléfono", silabas: ["TE", "LE", "FO", "NO"], emoji: "☎️" },
+            { palabra: "semáforo", silabas: ["SE", "MA", "FO", "RO"], emoji: "🚥" },
             { palabra: "calabaza", silabas: ["CA", "LA", "BA", "ZA"], emoji: "🎃" },
             { palabra: "lavadora", silabas: ["LA", "VA", "DO", "RA"], emoji: "🧺" },
             { palabra: "limonada", silabas: ["LI", "MO", "NA", "DA"], emoji: "🍋" },
             { palabra: "zapatilla", silabas: ["ZA", "PA", "TI", "LLA"], emoji: "👟" },
-            { palabra: "gusanito", silabas: ["GU", "SA", "NI", "TO"], emoji: "🐛" },
-            { palabra: "hipopotamo", silabas: ["HI", "PO", "PO", "TA", "MO"], emoji: "🦛" }
+            { palabra: "caramelo", silabas: ["CA", "RA", "ME", "LO"], emoji: "🍬" },
+            { palabra: "pelícano", silabas: ["PE", "LÍ", "CA", "NO"], emoji: "🐦" },
+            { palabra: "hipopótamo", silabas: ["HI", "PO", "PO", "TA", "MO"], emoji: "🦛" },
+            { palabra: "golosina", silabas: ["GO", "LO", "SI", "NA"], emoji: "🍭" },
+            { palabra: "ensalada", silabas: ["EN", "SA", "LA", "DA"], emoji: "🥗" },
+            { palabra: "gelatina", silabas: ["GE", "LA", "TI", "NA"], emoji: "🍮" },
+            { palabra: "panadero", silabas: ["PA", "NA", "DE", "RO"], emoji: "🧑‍🍳" },
+            { palabra: "marinero", silabas: ["MA", "RI", "NE", "RO"], emoji: "⚓" },
+            { palabra: "pasajero", silabas: ["PA", "SA", "JE", "RO"], emoji: "🧳" },
+            { palabra: "abanico", silabas: ["A", "BA", "NI", "CO"], emoji: "🪭" },
+            { palabra: "amapola", silabas: ["A", "MA", "PO", "LA"], emoji: "🌺" },
+            { palabra: "cocinero", silabas: ["CO", "CI", "NE", "RO"], emoji: "👨‍🍳" },
+            { palabra: "elefante", silabas: ["E", "LE", "FAN", "TE"], emoji: "🐘" },
+            { palabra: "batidora", silabas: ["BA", "TI", "DO", "RA"], emoji: "🥣" },
+            { palabra: "emergencia", silabas: ["E", "MER", "GEN", "CIA"], emoji: "🚨" },
+            { palabra: "chupete", silabas: ["CHU", "PE", "TE"], emoji: "🍼" },
+            { palabra: "billete", silabas: ["BI", "LLE", "TE"], emoji: "💵" },
+            { palabra: "cometa", silabas: ["CO", "ME", "TA"], emoji: "🪁" },
+            { palabra: "macaco", silabas: ["MA", "CA", "CO"], emoji: "🐒" },
+            { palabra: "pepino", silabas: ["PE", "PI", "NO"], emoji: "🥒" },
+            { palabra: "velero", silabas: ["VE", "LE", "RO"], emoji: "⛵" },
+            { palabra: "sonido", silabas: ["SO", "NI", "DO"], emoji: "🎵" },
+            { palabra: "tesorero", silabas: ["TE", "SO", "RE", "RO"], emoji: "💰" },
+            { palabra: "moneda", silabas: ["MO", "NE", "DA"], emoji: "🪙" },
+            { palabra: "farola", silabas: ["FA", "RO", "LA"], emoji: "🏮" },
+            { palabra: "carreta", silabas: ["CA", "RRE", "TA"], emoji: "🛒" },
+            { palabra: "carrete", silabas: ["CA", "RRE", "TE"], emoji: "🧵" },
+            { palabra: "pensamiento", silabas: ["PEN", "SA", "MIEN", "TO"], emoji: "🤔" },
+            { palabra: "polera", silabas: ["PO", "LE", "RA"], emoji: "👕" },
+            { palabra: "visera", silabas: ["VI", "SE", "RA"], emoji: "🧢" },
+            { palabra: "babero", silabas: ["BA", "BE", "RO"], emoji: "👶" },
+            { palabra: "venado", silabas: ["VE", "NA", "DO"], emoji: "🦌" },
+            { palabra: "camello", silabas: ["CA", "ME", "LLO"], emoji: "🐪" }
         ];
 
         const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO"];
 
         let itemActual = null;
         let ultimaPreguntaTexto = "";
-        let ultimaPalabra = ""; // Variable para evitar repetir la misma palabra de corrido
         let silabasRestantes = []; 
         let silabasArmadas = [];
+        
+        let jugadasFacil = [];
+        let jugadasMedio = [];
+        let jugadasDificil = [];
+
+        function mezclarArray(array) {
+            let arrayCopia = [...array];
+            for (let i = arrayCopia.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arrayCopia[i], arrayCopia[j]] = [arrayCopia[j], arrayCopia[i]];
+            }
+            return arrayCopia;
+        }
 
         function hablar(texto) {
             if ('speechSynthesis' in window) {
@@ -434,11 +520,11 @@
         }
 
         function abrirSelector() { document.getElementById('modal-niveles').style.display = 'flex'; }
+        
         function cerrarSelector() { document.getElementById('modal-niveles').style.display = 'none'; }
         
         function seleccionarDificultad(nivelInicio) {
             currentLevel = nivelInicio;
-            ultimaPalabra = ""; // Reiniciamos para que al cambiar de nivel sea 100% fresco
             cerrarSelector();
             playLevel();
         }
@@ -447,12 +533,16 @@
             document.getElementById('pantalla-inicio').style.display = 'none';
             document.getElementById('juego-container').style.display = 'block';
             document.getElementById('btn-config').style.display = 'block';
+            
+            jugadasFacil = mezclarArray(palabrasFacil);
+            jugadasMedio = mezclarArray(palabrasMedio);
+            jugadasDificil = mezclarArray(palabrasDificil);
+            
             initGame();
         }
 
         function initGame() {
             currentLevel = 1;
-            ultimaPalabra = "";
             playLevel();
         }
 
@@ -475,25 +565,17 @@
             progressBar.style.width = porcentaje + "%";
             progressText.textContent = `Progreso: Nivel ${currentLevel} de ${maxLevels}`;
 
-            let bancoActual = [];
             if (currentLevel <= 30) {
-                bancoActual = palabrasFacil;
+                itemActual = jugadasFacil[currentLevel - 1];
                 title.textContent = `Nivel ${currentLevel} (Fácil 😊)`;
             } else if (currentLevel <= 60) {
-                bancoActual = palabrasMedio;
+                itemActual = jugadasMedio[currentLevel - 31];
                 title.textContent = `Nivel ${currentLevel} (Medio 😐)`;
             } else {
-                bancoActual = palabrasDificil;
+                itemActual = jugadasDificil[currentLevel - 61];
                 title.textContent = `Nivel ${currentLevel} (Difícil 🥵)`;
             }
 
-            // SELECCIÓN ALEATORIA EVITANDO LA ÚLTIMA PALABRA REPETIDA
-            do {
-                let indiceAleatorio = Math.floor(Math.random() * bancoActual.length);
-                itemActual = bancoActual[indiceAleatorio];
-            } while (itemActual.palabra === ultimaPalabra && bancoActual.length > 1);
-            
-            ultimaPalabra = itemActual.palabra; // Guardamos para la próxima vez
             silabasRestantes = [...itemActual.silabas]; 
             silabasArmadas = []; 
 
@@ -616,6 +698,9 @@
             restartBtn.style.width = "auto";
             restartBtn.onclick = () => {
                 document.getElementById('btn-config').style.display = 'block';
+                jugadasFacil = mezclarArray(palabrasFacil);
+                jugadasMedio = mezclarArray(palabrasMedio);
+                jugadasDificil = mezclarArray(palabrasDificil);
                 initGame();
             };
             document.getElementById('options-container').appendChild(restartBtn);
