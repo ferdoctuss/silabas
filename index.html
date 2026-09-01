@@ -54,6 +54,7 @@
             gap: 15px;
             margin: 20px auto;
             min-height: 70px;
+            transition: all 0.5s ease; /* Transición suave para cuando crece */
         }
 
         .slot {
@@ -99,10 +100,9 @@
             color: white;
             cursor: pointer;
             box-shadow: 0 6px 0 #006652;
-            transition: all 0.1s;
-            touch-action: manipulation;
+            transition: opacity 0.3s ease, transform 0.1s; /* Agregada transición de opacidad para desaparecer */
             min-width: 80px;
-            flex: 1 1 40%; /* Para que se acomoden 2 por fila si la pantalla es chica */
+            flex: 1 1 40%;
         }
         button.opcion:active {
             transform: translateY(6px);
@@ -193,6 +193,16 @@
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         
+        /* Animación para que la palabra completa crezca */
+        @keyframes growWord {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1.15); }
+        }
+        .word-complete {
+            animation: growWord 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
         /* Animación para cuando toca la sílaba incorrecta */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -257,13 +267,13 @@
         let currentLevel = 1;
         const maxLevels = 20;
         
-        // Banco de palabras separadas en sílabas (ideales para 2 sílabas)
+        // Banco de palabras revisado: Todas inconfundibles y directas
         const palabrasBanco = [
             { palabra: "casa", silabas: ["CA", "SA"], emoji: "🏠" },
             { palabra: "gato", silabas: ["GA", "TO"], emoji: "🐱" },
-            { palabra: "mesa", silabas: ["ME", "SA"], emoji: "🪑" },
             { palabra: "luna", silabas: ["LU", "NA"], emoji: "🌙" },
-            { palabra: "sapo", silabas: ["SA", "PO"], emoji: "🐸" },
+            { palabra: "moto", silabas: ["MO", "TO"], emoji: "🏍️" },
+            { palabra: "auto", silabas: ["AU", "TO"], emoji: "🚗" },
             { palabra: "pato", silabas: ["PA", "TO"], emoji: "🦆" },
             { palabra: "vaca", silabas: ["VA", "CA"], emoji: "🐮" },
             { palabra: "mano", silabas: ["MA", "NO"], emoji: "✋" },
@@ -273,12 +283,12 @@
             { palabra: "sopa", silabas: ["SO", "PA"], emoji: "🍲" },
             { palabra: "loro", silabas: ["LO", "RO"], emoji: "🦜" },
             { palabra: "pino", silabas: ["PI", "NO"], emoji: "🌲" },
-            { palabra: "cuna", silabas: ["CU", "NA"], emoji: "🛏️" },
-            { palabra: "lata", silabas: ["LA", "TA"], emoji: "🥫" },
             { palabra: "rosa", silabas: ["RO", "SA"], emoji: "🌹" },
-            { palabra: "pelo", silabas: ["PE", "LO"], emoji: "💇‍♂️" },
             { palabra: "dedo", silabas: ["DE", "DO"], emoji: "👆" },
-            { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" }
+            { palabra: "foco", silabas: ["FO", "CO"], emoji: "💡" },
+            { palabra: "mono", silabas: ["MO", "NO"], emoji: "🐒" },
+            { palabra: "lobo", silabas: ["LO", "BO"], emoji: "🐺" },
+            { palabra: "taza", silabas: ["TA", "ZA"], emoji: "☕" }
         ];
 
         const silabasDistractoras = ["PA", "MA", "SA", "LA", "TA", "PE", "ME", "SE", "LE", "TE", "CA", "CO", "CU", "PO", "PI", "RO", "RU", "NA", "NO", "BO"];
@@ -299,13 +309,12 @@
             }
         }
 
-        // Filtro fonético para que las sílabas suenen limpias
         function hablarSilaba(silaba) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 let fonetica = silaba.toLowerCase();
                 fonetica = fonetica.replace('a', 'á').replace('e', 'é').replace('i', 'í').replace('o', 'ó').replace('u', 'ú');
-                fonetica = fonetica + "."; // Forzamos entonación final para que no deletree
+                fonetica = fonetica + ".";
                 let utterance = new SpeechSynthesisUtterance(fonetica);
                 utterance.lang = 'es-ES';
                 utterance.rate = 0.75; 
@@ -340,6 +349,9 @@
 
             messageDiv.className = "";
             messageDiv.textContent = "";
+            
+            // Le quitamos la animación de la palabra completada si la tuviera del nivel anterior
+            builderContainer.classList.remove("word-complete");
 
             let porcentaje = (currentLevel / maxLevels) * 100;
             progressBar.style.width = porcentaje + "%";
@@ -348,8 +360,8 @@
             title.textContent = `Nivel ${currentLevel}`;
 
             itemActual = palabrasBanco[(currentLevel - 1) % palabrasBanco.length];
-            silabasRestantes = [...itemActual.silabas]; // Copia de las sílabas que faltan
-            silabasArmadas = []; // Se reinician las completadas
+            silabasRestantes = [...itemActual.silabas]; 
+            silabasArmadas = []; 
 
             let textoPregunta = `¿Cómo se escribe ${itemActual.palabra}?`;
             questionText.textContent = textoPregunta + " 🤔";
@@ -358,7 +370,6 @@
             hablar(textoPregunta);
             imageContainer.innerHTML = itemActual.emoji;
 
-            // Dibujar las casillas vacías (dependiendo de cuántas sílabas tiene la palabra)
             builderContainer.innerHTML = "";
             for(let i=0; i < itemActual.silabas.length; i++) {
                 const slot = document.createElement('div');
@@ -367,7 +378,6 @@
                 builderContainer.appendChild(slot);
             }
 
-            // Generar 4 opciones: Las sílabas correctas + distractores
             let options = [...itemActual.silabas];
             while (options.length < 4) {
                 let randomSilaba = silabasDistractoras[Math.floor(Math.random() * silabasDistractoras.length)];
@@ -389,50 +399,49 @@
         }
 
         function procesarToque(btn, silabaTocada) {
-            // Siempre se lee la sílaba que el niño toca
             hablarSilaba(silabaTocada);
 
-            // Verificamos si la sílaba tocada es la que sigue en el orden correcto
             if (silabaTocada === silabasRestantes[0]) {
-                // ¡ES CORRECTA Y EN ORDEN!
-                silabasRestantes.shift(); // Quitamos la sílaba de las pendientes
-                silabasArmadas.push(silabaTocada); // La pasamos a las armadas
+                silabasRestantes.shift(); 
+                silabasArmadas.push(silabaTocada); 
 
-                // Ocultamos el botón que acaba de tocar
                 btn.style.visibility = 'hidden'; 
 
-                // Llenamos la casilla correspondiente arriba
                 const slotActual = document.getElementById("slot-" + (silabasArmadas.length - 1));
                 slotActual.textContent = silabaTocada;
                 slotActual.classList.add("filled");
 
-                // Verificamos si ya completó toda la palabra
                 if (silabasRestantes.length === 0) {
                     terminarNivel();
                 }
 
             } else {
-                // ES INCORRECTA (O NO ES SU TURNO)
-                // Se lee, pero el botón solo vibra y no baja
                 btn.classList.add("shake-animation");
                 setTimeout(() => {
                     btn.classList.remove("shake-animation");
-                }, 400); // Se quita la clase para que pueda volver a vibrar si se equivoca de nuevo
+                }, 400); 
             }
         }
 
         function terminarNivel() {
             const messageDiv = document.getElementById('message');
             const optionsDiv = document.getElementById('options-container');
+            const builderContainer = document.getElementById('word-builder');
+
+            // Hacemos desaparecer suavemente los botones que sobraron
             const buttons = Array.from(optionsDiv.children);
+            buttons.forEach(btn => {
+                btn.style.opacity = "0";
+                btn.style.pointerEvents = "none";
+            });
+
+            // Agregamos la animación para que crezca la palabra armada
+            builderContainer.classList.add("word-complete");
 
             messageDiv.textContent = `¡Muy bien! 🎉`;
             messageDiv.style.color = "#00b894";
             messageDiv.className = "animacion-exito";
             
-            buttons.forEach(btn => btn.disabled = true);
-            
-            // Leemos la palabra completa y lo felicitamos
             setTimeout(() => {
                 hablar(`${itemActual.palabra}, muy bien Pol`);
             }, 600);
@@ -444,7 +453,7 @@
                 } else {
                     playLevel();
                 }
-            }, 2600); 
+            }, 2800); 
         }
 
         function endGame() {
